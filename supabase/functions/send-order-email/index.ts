@@ -26,16 +26,6 @@ serve(async (req) => {
 
     console.log('Entorno:', isLocalhost ? 'LOCAL' : 'PRODUCCIÓN')
 
-    if (!isLocalhost) {
-      const authHeader = req.headers.get('Authorization')
-      if (!authHeader) {
-        return new Response(
-          JSON.stringify({ msg: 'Missing authorization header' }), 
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        )
-      }
-    }
-
     const data = await req.json()
     console.log('Datos recibidos:', {
       orderId: data.orderId,
