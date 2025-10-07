@@ -32,7 +32,6 @@ const Checkout = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [touchedFields, setTouchedFields] = useState<Set<FormField>>(new Set());
 
   const initialFormData: CheckoutFormData = {
     name: user?.user_metadata?.full_name?.trim() || '',
@@ -56,7 +55,7 @@ const Checkout = () => {
 
   const validateForm = useCallback(() => {
     const errors: string[] = [];
-    
+
     if (!formData.name.trim()) errors.push('El nombre es obligatorio');
     if (!formData.email.trim()) {
       errors.push('El correo electrónico es obligatorio');
@@ -64,7 +63,7 @@ const Checkout = () => {
       errors.push('El correo electrónico no es válido');
     }
     if (!formData.address.trim()) errors.push('La dirección es obligatoria');
-    
+
     if (!items.length) {
       errors.push('El carrito está vacío');
     } else if (items.some(item => !item.quantity || item.quantity < 1)) {
@@ -110,10 +109,9 @@ const Checkout = () => {
       };
 
       const { data: orderId, error } = await supabase.rpc<string>('create_order_atomic_v2', rpcParams);
-
       if (error) throw error;
 
-      // Enviar email usando la función de Supabase
+      // Preparar datos del email
       const emailData = {
         orderId,
         customerEmail: formData.email.trim(),
@@ -124,43 +122,40 @@ const Checkout = () => {
         notes: formData.notes.trim()
       };
 
+      // Configuración URL de función y headers
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
       const isLocalhost = window.location.hostname === 'localhost';
       const functionUrl = isLocalhost
         ? 'http://127.0.0.1:54321/functions/v1/send-order-email'
-        : 'https://trzxjnkklzcfmtmqrusm.supabase.co/functions/v1/send-order-email';
-
-      console.log('📤 Enviando email...');
-      console.log('   URL:', functionUrl);
-      console.log('   Es localhost?', isLocalhost);
-      console.log('   Hostname:', window.location.hostname);
+        : `${supabaseUrl}/functions/v1/send-order-email`;
 
       const headers: Record<string, string> = { 
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey || ''
       };
-      
-      console.log('   Headers finales:', headers);
 
-
+      // Llamada a la función de Supabase
       const res = await fetch(functionUrl, {
         method: 'POST',
         headers,
         body: JSON.stringify(emailData)
       });
 
-      console.log('📥 Respuesta recibida:', res.status, res.statusText);
-
       if (!res.ok) {
         const errData = await res.json();
-        console.error('Error en respuesta:', errData);
+        console.error('Error enviando email:', errData);
       } else {
         const successData = await res.json();
-        console.log('Email enviado:', successData);
+        console.log('Email enviado con éxito:', successData);
       }
 
       toast.success('¡Pedido realizado con éxito!', { 
         description: `Número de orden: ${orderId}`, 
         duration: 5000 
       });
+
       clearCart();
       setTimeout(() => navigate('/'), 2000);
 
