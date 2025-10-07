@@ -131,8 +131,10 @@ const Checkout = () => {
         ? 'http://127.0.0.1:54321/functions/v1/send-order-email'
         : `${supabaseUrl}/functions/v1/send-order-email`;
 
+      // CORRECCIÓN: Incluir tanto Authorization como apikey
       const headers: Record<string, string> = { 
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${supabaseKey || ''}`,
         'apikey': supabaseKey || ''
       };
 
