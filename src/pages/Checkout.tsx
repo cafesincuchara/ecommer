@@ -137,15 +137,9 @@ const Checkout = () => {
       const headers: Record<string, string> = { 
         'Content-Type': 'application/json'
       };
-
-      if (!isLocalhost) {
-        headers.Authorization = `Bearer ${user?.access_token}`;
-        console.log('   Header Authorization agregado');
-      } else {
-        console.log('   Modo local: sin Authorization header');
-      }
-
+      
       console.log('   Headers finales:', headers);
+
 
       const res = await fetch(functionUrl, {
         method: 'POST',
