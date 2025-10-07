@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [checkAdminStatus]);
 
-  // ✅ Solo mostrar loading screen en la carga inicial
+  // ✅ Solo mostrar loading screen en la carga inici
   // Después de eso, permitir que la app funcione normalmente
   if (!isInitialized) {
     return (
