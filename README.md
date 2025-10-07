@@ -1,183 +1,81 @@
-# Supabase CLI
+# 🛍️ Tienda Online con Supabase y React
 
-[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
-](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
+Una tienda en línea moderna construida con React, Supabase, y desplegada en Vercel. Incluye autenticación, carrito de compras y panel de administración.
 
-[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
+## 🚀 Descripción General
 
-This repository contains all the functionality for Supabase CLI.
+Este proyecto es una plataforma de comercio electrónico completa que permite a los usuarios:
+- Explorar productos
+- Iniciar sesión/registrarse
+- Agregar productos al carrito
+- Realizar pedidos
+- Recibir confirmaciones por correo electrónico
 
-- [x] Running Supabase locally
-- [x] Managing database migrations
-- [x] Creating and deploying Supabase Functions
-- [x] Generating types directly from your database schema
-- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
+### 🛠️ Tecnologías Principales
+- **Frontend**: React + TypeScript + Vite
+- **UI/UX**: shadcn/ui + Tailwind CSS
+- **Backend**: Supabase (Base de datos y Autenticación)
+- **Email**: Resend
+- **Despliegue**: Vercel
+- **Formularios**: React Hook Form + Zod
+- **Manejo de Estado**: React Query
 
-## Getting started
+## 📁 Estructura del Proyecto
 
-### Install the CLI
 
-Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
 
-```bash
-npm i supabase --save-dev
-```
 
-To install the beta release channel:
+## 🛠️ Funcionamiento
 
-```bash
-npm i supabase@beta --save-dev
-```
+### Flujo del Usuario
+1. **Exploración**: Los usuarios pueden navegar por los productos sin necesidad de iniciar sesión.
+2. **Autenticación**: Para realizar compras, los usuarios deben registrarse o iniciar sesión.
+3. **Carrito**: Los usuarios pueden agregar/eliminar productos y ver el total.
+4. **Checkout**: Proceso de pago con validación de formulario.
+5. **Confirmación**: Los usuarios reciben un correo de confirmación.
 
-When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
+### Backend (Supabase)
+- **Autenticación**: Manejo de usuarios con Supabase Auth.
+- **Base de Datos**: Almacenamiento de productos, pedidos y perfiles de usuario.
+- **Funciones Edge**: Para operaciones seguras del lado del servidor.
 
-```
-NODE_OPTIONS=--no-experimental-fetch yarn add supabase
-```
+### Envío de Correos (Resend)
+- Se utiliza la API de Resend para enviar correos de confirmación de pedidos.
+- Las plantillas de correo están diseñadas para ser responsivas y profesionales.
 
-> **Note**
-For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
+## 🧠 Lógica Técnica
 
-<details>
-  <summary><b>macOS</b></summary>
+### Manejo de Estado
+- **Autenticación**: Contexto de autenticación global.
+- **Carrito**: Estado local con persistencia en localStorage.
+- **Datos Remotos**: React Query para el fetching y caching de datos.
 
-  Available via [Homebrew](https://brew.sh). To install:
+### Componentes Clave
+- **ProductList**: Muestra la lista de productos con paginación.
+- **Cart**: Muestra los productos en el carrito con opciones para modificar cantidades.
+- **CheckoutForm**: Formulario de pago con validación.
+- **AdminPanel**: Interfaz para gestionar productos y pedidos.
 
-  ```sh
-  brew install supabase/tap/supabase
-  ```
+## 🛠️ Reutilización del Proyecto
 
-  To install the beta release channel:
-  
-  ```sh
-  brew install supabase/tap/supabase-beta
-  brew link --overwrite supabase-beta
-  ```
-  
-  To upgrade:
+### Personalización
+1. **Diseño**: Modifica los colores en [tailwind.config.ts](cci:7://file:///c:/Users/vicen/Desktop/shop-solo-supa-main/tailwind.config.ts:0:0-0:0).
+2. **Contenido**: Actualiza los productos en la base de datos de Supabase.
+3. **Dominio**: Configura tu propio dominio en Vercel.
 
-  ```sh
-  brew upgrade supabase
-  ```
-</details>
+### Configuración Requerida
+1. Crea un proyecto en [Supabase](https://supabase.com/).
+2. Configura las tablas necesarias (products, orders, profiles).
+3. Configura la autenticación en Supabase.
+4. Crea una cuenta en [Resend](https://resend.com/) para el envío de correos.
 
-<details>
-  <summary><b>Windows</b></summary>
+## 🚀 Despliegue
 
-  Available via [Scoop](https://scoop.sh). To install:
+### Variables de Entorno
+Crea un archivo [.env](cci:7://file:///c:/Users/vicen/Desktop/shop-solo-supa-main/.env:0:0-0:0) en la raíz del proyecto con:
 
-  ```powershell
-  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
-  scoop install supabase
-  ```
-
-  To upgrade:
-
-  ```powershell
-  scoop update supabase
-  ```
-</details>
-
-<details>
-  <summary><b>Linux</b></summary>
-
-  Available via [Homebrew](https://brew.sh) and Linux packages.
-
-  #### via Homebrew
-
-  To install:
-
-  ```sh
-  brew install supabase/tap/supabase
-  ```
-
-  To upgrade:
-
-  ```sh
-  brew upgrade supabase
-  ```
-
-  #### via Linux packages
-
-  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
-
-  ```sh
-  sudo apk add --allow-untrusted <...>.apk
-  ```
-
-  ```sh
-  sudo dpkg -i <...>.deb
-  ```
-
-  ```sh
-  sudo rpm -i <...>.rpm
-  ```
-
-  ```sh
-  sudo pacman -U <...>.pkg.tar.zst
-  ```
-</details>
-
-<details>
-  <summary><b>Other Platforms</b></summary>
-
-  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
-
-  ```sh
-  go install github.com/supabase/cli@latest
-  ```
-
-  Add a symlink to the binary in `$PATH` for easier access:
-
-  ```sh
-  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
-  ```
-
-  This works on other non-standard Linux distros.
-</details>
-
-<details>
-  <summary><b>Community Maintained Packages</b></summary>
-
-  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
-  To install in your working directory:
-
-  ```bash
-  pkgx install supabase
-  ```
-
-  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
-</details>
-
-### Run the CLI
-
-```bash
-supabase bootstrap
-```
-
-Or using npx:
-
-```bash
-npx supabase bootstrap
-```
-
-The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
-
-## Docs
-
-Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
-
-## Breaking changes
-
-We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
-
-However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
-
-## Developing
-
-To run from source:
-
-```sh
-# Go >= 1.22
-go run . help
-```
+```env
+VITE_SUPABASE_URL=tu_url_de_supabase
+VITE_SUPABASE_ANON_KEY=tu_clave_anonima_de_supabase
+VITE_RESEND_API_KEY=tu_api_key_de_resend
+VITE_SITE_URL=tu_url_de_produccion
