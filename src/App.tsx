@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
-
+import AuthCallback from "./pages/AuthCallback";  
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminPanel from "./pages/admin/index";
 import NewProduct from "./pages/admin/NewProduct";
@@ -57,8 +57,9 @@ const AppContent = () => (
         {/* Rutas pública */}
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
-        {/* Rutas protegids */}
+        {/* Rutas protegidas */}
         <Route
           path="/checkout"
           element={
