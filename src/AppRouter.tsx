@@ -3,7 +3,7 @@ import TestConnection from "./pages/TestConnection";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
-import AuthCallback from "./pages/uthCallback";
+import AuthCallback from "./pages/AuthCallback";
 
 <Route path="/auth/callback" element={<AuthCallback />} />
 
