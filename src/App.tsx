@@ -54,7 +54,7 @@ const AppContent = () => (
   <ErrorBoundary>
     <BrowserRouter>
       <Routes>
-        {/* Rutas públicas */}
+        {/* Rutas pública */}
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
 
