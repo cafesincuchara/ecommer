@@ -58,7 +58,7 @@ const AppContent = () => (
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
 
-        {/* Rutas protegidas */}
+        {/* Rutas protegids */}
         <Route
           path="/checkout"
           element={
